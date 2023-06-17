@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
+use App\Application\Actions\CheckoutCart\AddProductCheckoutCartAction;
 use App\Application\Actions\CheckoutCart\CreateCheckoutCartAction;
+use App\Application\Actions\CheckoutCart\ViewCheckoutCartAction;
 use App\Application\Actions\Product\{CreateProductAction, ListProductsAction, ViewProductAction};
 use App\Application\Actions\ProductType\{CreateProductTypeAction, ListProductTypesAction};
 use App\Application\Actions\User\{ListUsersAction, ViewUserAction};

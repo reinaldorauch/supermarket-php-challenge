@@ -8,6 +8,9 @@ use PDO;
 
 class PostgresConnection
 {
+    const POSTGRES_MAX_SMALLINT_VAL = 32767;
+    const POSTGRES_MIN_SMALLINT_VAL = -32768;
+
     private PDO $pdoConnection;
 
     public function __construct(string $dsn)
