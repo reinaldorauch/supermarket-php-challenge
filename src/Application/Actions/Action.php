@@ -6,6 +6,7 @@ namespace App\Application\Actions;
 
 use App\Domain\DomainException\DomainRecordNotFoundException;
 use App\Domain\DomainException\InvalidDataException;
+use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface;
@@ -91,5 +92,10 @@ abstract class Action
         return $this->response
             ->withHeader('Content-Type', 'application/json')
             ->withStatus($payload->getStatusCode());
+    }
+
+    protected function success(): Response
+    {
+        return $this->response->withStatus(StatusCodeInterface::STATUS_OK);
     }
 }

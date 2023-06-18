@@ -79,6 +79,11 @@ $app->addBodyParsingMiddleware();
 $errorMiddleware = $app->addErrorMiddleware($displayErrorDetails, $logError, $logErrorDetails);
 $errorMiddleware->setDefaultErrorHandler($errorHandler);
 
+$app->add(new Tuupola\Middleware\JwtAuthentication([
+	'secret' => $settings->get('secret'),
+	'ignore' => ['/auth/login']
+]));
+
 // Run App & Emit Response
 $response = $app->handle($request);
 $responseEmitter = new ResponseEmitter();

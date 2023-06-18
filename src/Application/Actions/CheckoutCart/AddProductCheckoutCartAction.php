@@ -14,12 +14,16 @@ class AddProductCheckoutCartAction extends CheckoutCartAction
 
         $data = $this->getFormData();
 
+        // If no cart, throws and returns 404
         $cart = $this->checkoutCartRepository->findById($cartId);
 
+        // If no product, throws and returns 404
         $prod = $this->productRepository->findById($data["productId"]);
 
-        $data['productId'] = $prod->getId();
-        $cartItem = $this->checkoutCartItemRepository->addItemToCart($cart, $data);
+        $cartItem = $this->checkoutCartItemRepository->addItemToCart($cart, [
+            'productId' => $prod->getId(),
+            'quantity' => $data['quantity']
+        ]);
 
         return $this->respondWithData($cartItem);
     }

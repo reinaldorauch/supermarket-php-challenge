@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Application\Actions\CheckoutCart\AddProductCheckoutCartAction;
-use App\Application\Actions\CheckoutCart\CreateCheckoutCartAction;
-use App\Application\Actions\CheckoutCart\ViewCheckoutCartAction;
+use App\Application\Actions\Auth\LoginAction;
+use App\Application\Actions\CheckoutCart\{AddProductCheckoutCartAction, CreateCheckoutCartAction, ViewCheckoutCartAction};
 use App\Application\Actions\Product\{CreateProductAction, ListProductsAction, ViewProductAction};
 use App\Application\Actions\ProductType\{CreateProductTypeAction, ListProductTypesAction};
 use App\Application\Actions\User\{ListUsersAction, ViewUserAction};
@@ -22,6 +21,11 @@ return function (App $app) {
     $app->get('/', function (Request $request, Response $response) {
         $response->getBody()->write('Hello world!');
         return $response;
+    });
+
+    $app->group('/auth', function (Group $group) {
+        $group->post('/login', LoginAction::class);
+        $group->post('/logout', AuthLogoutAction::class);
     });
 
     $app->group('/users', function (Group $group) {

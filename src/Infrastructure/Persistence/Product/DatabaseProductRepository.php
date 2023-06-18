@@ -47,7 +47,8 @@ class DatabaseProductRepository implements ProductRepository
 
         $stmt->bindParam(1, $prod->name, PDO::PARAM_STR);
         $stmt->bindParam(2, $prod->price, PDO::PARAM_INT);
-        $stmt->bindParam(3, $prod->type->getId(), PDO::PARAM_INT);
+        $id = $prod->type->getId();
+        $stmt->bindParam(3, $id, PDO::PARAM_INT);
 
         $stmt->execute();
 
