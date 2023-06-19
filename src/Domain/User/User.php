@@ -8,20 +8,24 @@ use JsonSerializable;
 
 class User implements JsonSerializable
 {
-    private ?int $id;
+    public ?int $id;
 
-    private string $username;
+    public string $username;
 
-    private string $firstName;
+    public string $firstName;
 
-    private string $lastName;
+    public string $lastName;
 
-    public function __construct(?int $id, string $username, string $firstName, string $lastName, private string $passwordHash)
+    public string $passwordHash;
+
+    static function from(?int $id, string $username, string $firstName, string $lastName)
     {
-        $this->id = $id;
-        $this->username = strtolower($username);
-        $this->firstName = ucfirst($firstName);
-        $this->lastName = ucfirst($lastName);
+        $u = new User();
+        $u->id = $id;
+        $u->username = $username;
+        $u->firstName = $firstName;
+        $u->lastName = $lastName;
+        return $u;
     }
 
     public function getId(): ?int

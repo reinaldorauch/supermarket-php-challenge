@@ -6,7 +6,7 @@ use App\Application\Actions\Auth\LoginAction;
 use App\Application\Actions\CheckoutCart\{AddProductCheckoutCartAction, CreateCheckoutCartAction, ViewCheckoutCartAction};
 use App\Application\Actions\Product\{CreateProductAction, ListProductsAction, ViewProductAction};
 use App\Application\Actions\ProductType\{CreateProductTypeAction, ListProductTypesAction};
-use App\Application\Actions\User\{ListUsersAction, ViewUserAction};
+use App\Application\Actions\User\{CreateUserAction, ListUsersAction, ViewUserAction};
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
@@ -31,6 +31,7 @@ return function (App $app) {
     $app->group('/users', function (Group $group) {
         $group->get('', ListUsersAction::class);
         $group->get('/{id}', ViewUserAction::class);
+        $group->post('', CreateUserAction::class);
     });
 
     $app->group('/product', function (Group $group) {

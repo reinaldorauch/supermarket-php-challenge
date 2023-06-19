@@ -27,10 +27,10 @@ return function (ContainerBuilder $containerBuilder) {
 
             return $logger;
         },
-        PostgresConnection::class => function (ContainerInterface $c) {
+        PDO::class => function (ContainerInterface $c) {
             $settings = $c->get(SettingsInterface::class);
 
-            return new PostgresConnection($settings->get('databaseUrl'));
+            return new PDO($settings->get('databaseUrl'), null, null, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
         }
     ]);
 };

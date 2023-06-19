@@ -10,6 +10,7 @@ use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface;
+use Respect\Validation\Validator;
 use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpNotFoundException;
 
@@ -47,9 +48,15 @@ abstract class Action
         }
     }
 
+    public static function validator(): ?Validator
+    {
+        return null;
+    }
+
     /**
      * @throws DomainRecordNotFoundException
      * @throws HttpBadRequestException
+     * @throws InvalidDataException
      */
     abstract protected function action(): Response;
 

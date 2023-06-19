@@ -29,7 +29,7 @@ class UserTest extends TestCase
      */
     public function testGetters(int $id, string $username, string $firstName, string $lastName)
     {
-        $user = new User($id, $username, $firstName, $lastName);
+        $user = User::from($id, $username, $firstName, $lastName);
 
         $this->assertEquals($id, $user->getId());
         $this->assertEquals($username, $user->getUsername());
@@ -46,7 +46,7 @@ class UserTest extends TestCase
      */
     public function testJsonSerialize(int $id, string $username, string $firstName, string $lastName)
     {
-        $user = new User($id, $username, $firstName, $lastName);
+        $user = User::from($id, $username, $firstName, $lastName);
 
         $expectedPayload = json_encode([
             'id' => $id,
