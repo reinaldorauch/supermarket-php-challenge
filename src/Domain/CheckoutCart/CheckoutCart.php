@@ -15,6 +15,10 @@ class CheckoutCart implements JsonSerializable
 
     public int $id;
 
+    public int $responsibleUserId;
+
+    public int $createdBy;
+
     public function jsonSerialize(): mixed
     {
         return [

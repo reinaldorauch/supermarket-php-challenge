@@ -91,6 +91,8 @@ class DatabaseCheckoutCartItemRepository implements CheckoutCartItemRepository
                 (SELECT ("price" * ("taxRate"::decimal / 100) * :qty)::bigint FROM "product" "p" 
                   INNER JOIN "product_type" "pt" ON "p"."productTypeId" = "pt"."id" 
                   WHERE "p"."deletedAt" IS NULL AND "p"."id" = :id),
+                :userId,
+                :userId,
                 CURRENT_TIMESTAMP,
                 CURRENT_TIMESTAMP
             ) 

@@ -82,7 +82,8 @@ $errorMiddleware->setDefaultErrorHandler($errorHandler);
 
 $app->add(new Tuupola\Middleware\JwtAuthentication([
 	'secret' => $settings->get('secret'),
-	'ignore' => ['/auth/login']
+	'ignore' => ['/auth/login'],
+	'attribute' => 'tokenPayload'
 ]));
 
 // Run App & Emit Response

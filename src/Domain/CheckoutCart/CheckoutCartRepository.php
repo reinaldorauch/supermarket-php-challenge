@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domain\CheckoutCart;
 
+use Slim\Exception\HttpNotFoundException;
+
 interface CheckoutCartRepository
 {
     /**
@@ -17,7 +19,13 @@ interface CheckoutCartRepository
     public function findById(int $id): CheckoutCart;
 
     /**
+     * @throws HttpNotFoundException
+     * @return CheckoutCart|null
+     */
+    public function findByResponsibleUserId(int $id): ?CheckoutCart;
+
+    /**
      * @return CheckoutCart
      */
-    public function create(): CheckoutCart;
+    public function create(int $userId): CheckoutCart;
 }

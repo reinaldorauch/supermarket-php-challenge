@@ -22,7 +22,7 @@ CREATE TABLE "product" (
     "id"            BIGSERIAL PRIMARY KEY NOT NULL,
     "name"          VARCHAR(255) NOT NULL,
     "price"         BIGINT NOT NULL,
-    "productTypeId" BIGINT REFERENCES "product_type" ("id"),
+    "productTypeId" BIGINT NOT NULL REFERENCES "product_type" ("id"),
     "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL,
     "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL,
     "deletedAt" TIMESTAMP WITH TIME ZONE
@@ -30,14 +30,16 @@ CREATE TABLE "product" (
 
 CREATE TABLE "checkout_cart" (
     "id"        BIGSERIAL PRIMARY KEY NOT NULL,
+    "createdBy" BIGINT NOT NULL REFERENCES "users" ("id"),
+    "responsibleUserId" BIGINT NOT NULL REFERENCES "users" ("id"),
     "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL,
     "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL,
     "deletedAt" TIMESTAMP WITH TIME ZONE
 );
 
 CREATE TABLE "checkout_cart_product" (
-    "productId" BIGINT REFERENCES "product" ("id"),
-    "checkoutCartId" BIGINT REFERENCES "checkout_cart" ("id"),
+    "productId" BIGINT NOT NULL REFERENCES "product" ("id"),
+    "checkoutCartId" BIGINT NOT NULL REFERENCES "checkout_cart" ("id"),
     "quantity" SMALLINT NOT NULL,
     "chargedPrice" BIGINT NOT NULL,
     "chargedTotalPrice" BIGINT NOT NULL,

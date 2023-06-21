@@ -105,4 +105,9 @@ abstract class Action
     {
         return $this->response->withStatus(StatusCodeInterface::STATUS_OK);
     }
+
+    protected function getTokenData()
+    {
+        return $this->request->getAttribute('tokenPayload');
+    }
 }
