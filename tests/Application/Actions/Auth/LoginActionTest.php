@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Application\Actions\Auth;
 
+use App\Domain\User\User;
+use App\Domain\User\UserRepository;
 use App\Infrastructure\Persistence\User\DatabaseUserRepository;
+use Firebase\JWT\JWT;
 use Respect\Validation\Validator as v;
 use Tests\TestCase;
 
@@ -17,20 +20,31 @@ class LoginActionTest extends TestCase
         /** @var Container $container */
         $container = $app->getContainer();
 
-        $userRepo = $container->get(DatabaseUserRepository::class);
-
         $creds = ['username' => 'jagunco', 'password' => '12345'];
-        $userRepo->create([
-            ...$creds,
-            'firstName' => 'Jagunço',
-            'lastName' => 'Lala'
-        ]);
+
+        $user = User::from(
+            69,
+            $creds['username'],
+            'Jagunço',
+            'Lala'
+        );
+
+        $userRepositoryProphecy = $this->prophesize(UserRepository::class);
+        $userRepositoryProphecy
+            ->findByUsername($creds['username'])
+            ->willReturn($user)
+            ->shouldBeCalledOnce();
+
+        $container->set(UserRepository::class, $userRepositoryProphecy->reveal());
 
         $body = json_encode($creds);
         $req = $this->createRequest(
             'POST',
             '/auth/login',
-            ['HTTP_CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => 'application/json'],
+            [
+                'HTTP_CONTENT_TYPE' => 'application/json',
+                'HTTP_ACCEPT' => 'application/json'
+            ],
             [],
             [],
             $body
@@ -44,5 +58,13 @@ class LoginActionTest extends TestCase
             ->key('statusCode', v::equals(200));
 
         $this->assertNull($validator->assert($payload));
+        $this->assertEquals(
+            $user->getId(),
+            JWT::decode(
+                $payload['data']['token'],
+                $_ENV['SECRET'],
+                ['HS256']
+            )->sub
+        );
     }
 }
