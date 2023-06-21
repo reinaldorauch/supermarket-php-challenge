@@ -75,4 +75,37 @@ class LoginTest extends TestCase
 
         $this->assertNull($validator->assert($payload));
     }
+
+    public function testShouldReturnUnauthorizedWhenInvalidPassword()
+    {
+        $this->expectException(HttpUnauthorizedException::class);
+        $userRepo = $this->container->get(DatabaseUserRepository::class);
+
+        $creds = ['username' => 'jagunco', 'password' => '12345'];
+        $userRepo->create([
+            ...$creds,
+            'password' => '54321',
+            'firstName' => 'Jagunço',
+            'lastName' => 'Lala'
+        ]);
+
+
+        $body = json_encode($creds);
+        $req = $this->createRequest(
+            'POST',
+            '/auth/login',
+            ['HTTP_CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => 'application/json'],
+            [],
+            [],
+            $body
+        );
+        $res = $this->app->handle($req);
+
+        $data = (string) $res->getBody();
+        $payload = json_decode($data, true);
+
+        $validator = v::key('statusCode', v::equals(401));
+
+        $this->assertNull($validator->assert($payload));
+    }
 }

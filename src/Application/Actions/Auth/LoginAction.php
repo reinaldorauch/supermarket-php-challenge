@@ -25,6 +25,8 @@ class LoginAction extends AuthAction
         }
         try {
             $user = $this->userRepository->findByUsername($data['username']);
+            password_verify($data['password'], $user->passwordHash)
+                or throw new HttpUnauthorizedException($this->request, 'Invalid password');
             $jwt = JWT::encode([
                 'iat' => (new \DateTime())->getTimestamp(),
                 'exp' => (new \DateTime('now +2 hours'))->getTimestamp(),

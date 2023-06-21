@@ -48,6 +48,11 @@ class User implements JsonSerializable
         return $this->lastName;
     }
 
+    function setPassword(string $password): void
+    {
+        $this->passwordHash = password_hash($password, PASSWORD_ARGON2ID);
+    }
+
     #[\ReturnTypeWillChange]
     public function jsonSerialize(): array
     {

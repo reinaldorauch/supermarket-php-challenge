@@ -56,17 +56,18 @@ class DatabaseUserRepository implements UserRepository
 
     public function create(array $data): User
     {
-        $passwordHash = password_hash($data['password'], PASSWORD_ARGON2ID);
+        $user = User::from(null, $data['username'], $data['firstName'], $data['lastName']);
+        $user->setPassword($data['password']);
 
         $stmt = $this->db->prepare(
             'INSERT INTO "users" 
                 ("username", "firstName", "lastName", "passwordHash", "createdAt", "updatedAt") 
             VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) RETURNING *'
         );
-        $stmt->bindParam(1, $data['username'], PDO::PARAM_STR);
-        $stmt->bindParam(2, $data['firstName'], PDO::PARAM_STR);
-        $stmt->bindParam(3, $data['lastName'], PDO::PARAM_STR);
-        $stmt->bindParam(4, $passwordHash, PDO::PARAM_STR);
+        $stmt->bindParam(1, $user->username, PDO::PARAM_STR);
+        $stmt->bindParam(2, $user->firstName, PDO::PARAM_STR);
+        $stmt->bindParam(3, $user->lastName, PDO::PARAM_STR);
+        $stmt->bindParam(4, $user->passwordHash, PDO::PARAM_STR);
         $stmt->setFetchMode(PDO::FETCH_CLASS, User::class);
         $stmt->execute();
         return $stmt->fetch();

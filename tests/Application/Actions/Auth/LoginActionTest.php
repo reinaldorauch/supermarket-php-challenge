@@ -6,7 +6,6 @@ namespace Tests\Application\Actions\Auth;
 
 use App\Domain\User\User;
 use App\Domain\User\UserRepository;
-use App\Infrastructure\Persistence\User\DatabaseUserRepository;
 use Firebase\JWT\JWT;
 use Respect\Validation\Validator as v;
 use Tests\TestCase;
@@ -28,6 +27,7 @@ class LoginActionTest extends TestCase
             'Jagunço',
             'Lala'
         );
+        $user->setPassword($creds['password']);
 
         $userRepositoryProphecy = $this->prophesize(UserRepository::class);
         $userRepositoryProphecy
