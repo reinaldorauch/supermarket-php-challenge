@@ -25,7 +25,6 @@ return function (App $app) {
 
     $app->group('/auth', function (Group $group) {
         $group->post('/login', LoginAction::class);
-        $group->post('/logout', AuthLogoutAction::class);
     });
 
     $app->group('/users', function (Group $group) {
