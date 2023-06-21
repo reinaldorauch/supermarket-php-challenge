@@ -56,14 +56,12 @@ class DatabaseUserRepository implements UserRepository
 
     public function create(array $data): User
     {
-        $passwordHash = password_hash($data['password'], PASSWORD_ARGON2ID, [
-            'salt' => random_bytes(64)
-        ]);
+        $passwordHash = password_hash($data['password'], PASSWORD_ARGON2ID);
 
         $stmt = $this->db->prepare(
             'INSERT INTO "users" 
-                    ("username", "firstName", "lastName", "passwordHash", "createdAt", "updatedAt") 
-                VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) RETURNING *'
+                ("username", "firstName", "lastName", "passwordHash", "createdAt", "updatedAt") 
+            VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) RETURNING *'
         );
         $stmt->bindParam(1, $data['username'], PDO::PARAM_STR);
         $stmt->bindParam(2, $data['firstName'], PDO::PARAM_STR);

@@ -30,7 +30,12 @@ return function (ContainerBuilder $containerBuilder) {
         PDO::class => function (ContainerInterface $c) {
             $settings = $c->get(SettingsInterface::class);
 
-            return new PDO($settings->get('databaseUrl'), null, null, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+            return new PDO(
+                $settings->get('databaseUrl'),
+                null,
+                null,
+                [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+            );
         }
     ]);
 };

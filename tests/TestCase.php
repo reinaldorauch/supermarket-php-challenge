@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use App\Application\Settings\SettingsInterface;
+use DI\Container;
 use DI\ContainerBuilder;
-use Exception;
 use PHPUnit\Framework\TestCase as PHPUnit_TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -35,6 +36,11 @@ class TestCase extends PHPUnit_TestCase
         $settings = require __DIR__ . '/../app/settings.php';
         $settings($containerBuilder);
 
+        // Initializing empty database
+        // We need to do this before intialization of the main db connection
+        // to not get blocked when running the tests
+        $this->resetDatabase();
+
         // Set up dependencies
         $dependencies = require __DIR__ . '/../app/dependencies.php';
         $dependencies($containerBuilder);
@@ -45,6 +51,7 @@ class TestCase extends PHPUnit_TestCase
 
         // Build PHP-DI Container instance
         $container = $containerBuilder->build();
+
 
         // Instantiate the app
         AppFactory::setContainer($container);
@@ -61,6 +68,29 @@ class TestCase extends PHPUnit_TestCase
         return $app;
     }
 
+    protected function resetDatabase()
+    {
+        $dsn = $_ENV['DATABASE_URL'];
+        if (!is_string($dsn)) throw new \Exception('Invalid config type');
+
+        $db = preg_replace('/^.+dbname=([^;]+);.+$/', '\1', $dsn);
+        $origConnString = str_replace(';', ' ', preg_replace('/^pgsql:(.+)$/', '\1', $dsn));
+        $connString = preg_replace('/dbname=[^\s]+/', '', $origConnString);
+        $conn = \pg_connect($connString) or throw new \Exception('Could not connect to postgres');
+        $db = \pg_escape_identifier($conn, $db);
+
+        \pg_query($conn, "DROP DATABASE IF EXISTS $db");
+        \pg_query($conn, "CREATE DATABASE $db");
+
+        \pg_close($conn);
+        $conn = \pg_connect($origConnString) or throw new \Exception('Could not connect to postgres');
+
+        $dbFile = file_get_contents(__DIR__ . '/../docs/database/00001_create_db.sql');
+        \pg_query($conn, $dbFile) or throw new \Exception('could not run database script');
+
+        \pg_close($conn);
+    }
+
     /**
      * @param string $method
      * @param string $path
@@ -74,11 +104,11 @@ class TestCase extends PHPUnit_TestCase
         string $path,
         array $headers = ['HTTP_ACCEPT' => 'application/json'],
         array $cookies = [],
-        array $serverParams = []
+        array $serverParams = [],
+        string $body = ''
     ): Request {
         $uri = new Uri('', '', 80, $path);
-        $handle = fopen('php://temp', 'w+');
-        $stream = (new StreamFactory())->createStreamFromResource($handle);
+        $stream = (new StreamFactory())->createStream($body);
 
         $h = new Headers();
         foreach ($headers as $name => $value) {

@@ -7,6 +7,7 @@ namespace App\Application\Actions\Auth;
 use App\Application\Actions\Auth\AuthAction;
 use Firebase\JWT\JWT;
 use Psr\Http\Message\ResponseInterface;
+use Slim\Exception\HttpBadRequestException;
 use Tuupola\Base62;
 
 class LoginAction extends AuthAction
@@ -14,6 +15,9 @@ class LoginAction extends AuthAction
     public function action(): ResponseInterface
     {
         $data = $this->getFormData();
+        if (!$data) {
+            throw new HttpBadRequestException($this->request);
+        }
         $user = $this->userRepository->findByUsername($data['username']);
         $jwt = JWT::encode([
             'iat' => (new \DateTime())->getTimestamp(),

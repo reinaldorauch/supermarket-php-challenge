@@ -14,6 +14,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
+$dotenv->required(['DATABASE_URL', 'SECRET']);
 
 // Instantiate PHP-DI ContainerBuilder
 $containerBuilder = new ContainerBuilder();
