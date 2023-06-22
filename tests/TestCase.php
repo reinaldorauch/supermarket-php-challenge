@@ -84,8 +84,9 @@ class TestCase extends PHPUnit_TestCase
         $tables = preg_grep('/CREATE TABLE/', explode("\n", $dbFile));
         $tables = array_map(fn ($l) => preg_replace('/^CREATE TABLE "(.+)".+$/', '\1', $l), $tables);
 
+        // Dropping in reverse because of foreign keys definitions
         foreach (array_reverse($tables) as $t) {
-            \pg_query($conn, "DROP TABLE " . \pg_escape_identifier($conn, $t));
+            \pg_query($conn, "DROP TABLE IF EXISTS " . \pg_escape_identifier($conn, $t));
         }
 
         \pg_query($conn, $dbFile) or throw new \Exception('could not run database script');
