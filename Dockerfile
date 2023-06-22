@@ -5,3 +5,4 @@ RUN  docker-php-ext-install pdo_pgsql pgsql
 
 WORKDIR /var/www
 
+CMD php -S 0.0.0.0:8000 -t public
