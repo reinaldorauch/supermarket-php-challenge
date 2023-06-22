@@ -37,8 +37,11 @@ jobs:
         if: matrix.analysis
         run: vendor/bin/phpstan
 
-      - name: Writing .env file
-        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL}}\nSECRET=${{ secrets.SECRET }}" >> tests/.env
+      - name: Writing database url to the .env file
+        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL}}" >> tests/.env
+
+      - name: Writing secret to the .env file
+        run: echo "SECRET=${{ secrets.SECRET}}" >> tests/.env
 
       - name: Tests
         run: vendor/bin/phpunit --coverage-clover clover.xml
