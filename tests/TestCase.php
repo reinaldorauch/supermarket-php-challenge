@@ -74,24 +74,20 @@ class TestCase extends PHPUnit_TestCase
             throw new \Exception('Invalid config type');
         }
 
-        $db = preg_replace('/^.+dbname=([^;]+);.+$/', '\1', $dsn);
         $origConnString = str_replace(';', ' ', preg_replace('/^pgsql:(.+)$/', '\1', $dsn));
-        $connString = preg_replace('/dbname=[^\s]+/', '', $origConnString);
 
         // To be able to drop a database we need to connect without specifying it
-        $conn = \pg_connect($connString) or throw new \Exception('Could not connect to postgres');
-        $db = \pg_escape_identifier($conn, $db);
-
-        \pg_query($conn, "DROP DATABASE IF EXISTS $db");
-        \pg_query($conn, "CREATE DATABASE $db");
-
-        \pg_close($conn);
-
-        // Then, to load the script we need to close the last connection and
-        // connect it again, now specifying the database name
         $conn = \pg_connect($origConnString) or throw new \Exception('Could not connect to postgres');
 
         $dbFile = file_get_contents(__DIR__ . '/../docs/database/00001_create_db.sql');
+
+        $tables = preg_grep('/CREATE TABLE/', explode("\n", $dbFile));
+        $tables = array_map(fn ($l) => preg_replace('/^CREATE TABLE "(.+)".+$/', '\1', $l), $tables);
+
+        foreach (array_reverse($tables) as $t) {
+            \pg_query($conn, "DROP TABLE " . \pg_escape_identifier($conn, $t));
+        }
+
         \pg_query($conn, $dbFile) or throw new \Exception('could not run database script');
 
         \pg_close($conn);
