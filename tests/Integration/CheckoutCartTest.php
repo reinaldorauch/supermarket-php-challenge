@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Integration;
 
+use App\Domain\CheckoutCart\CheckoutCartRepository;
+use DI\Container;
 use Fig\Http\Message\StatusCodeInterface;
+use Prophecy\Argument;
 use Respect\Validation\Validator as v;
 use Tests\TestCase;
 
@@ -13,6 +16,14 @@ class CheckoutCartTest extends TestCase
     public function testCreateCheckoutCartShouldFailIfNoToken()
     {
         $app = $this->getAppInstance();
+        /** @var Container */
+        $container = $app->getContainer();
+
+        $repoProphecy = $this->prophesize(CheckoutCartRepository::class);
+        $repoProphecy->create(Argument::type('int'))->shouldNotBeCalled();
+
+        $container->set(CheckoutCartRepository::class, $repoProphecy->reveal());
+
         $request = $this->createRequest('POST', '/checkout-cart');
         $response = $app->handle($request);
         $this->assertEquals(StatusCodeInterface::STATUS_UNAUTHORIZED, $response->getStatusCode());
