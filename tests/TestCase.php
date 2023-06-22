@@ -86,7 +86,7 @@ class TestCase extends PHPUnit_TestCase
 
         // Dropping in reverse because of foreign keys definitions
         foreach (array_reverse($tables) as $t) {
-            \pg_query($conn, "DROP TABLE IF EXISTS " . \pg_escape_identifier($conn, $t));
+            \pg_query($conn, "DROP TABLE IF EXISTS " . \pg_escape_identifier($conn, $t) . ' CASCADE');
         }
 
         \pg_query($conn, $dbFile) or throw new \Exception('could not run database script');
