@@ -2,10 +2,14 @@
 
 declare(strict_types=1);
 
-
 namespace App\Infrastructure\Persistence\CheckoutCart;
 
-use App\Domain\CheckoutCart\{CheckoutCart, CheckoutCartItem, CheckoutCartItemRepository, ItemNotFoundException, ItemQuantityOutOfBoundsException};
+use App\Domain\CheckoutCart\{
+    CheckoutCart,
+    CheckoutCartItem,
+    CheckoutCartItemRepository,
+    ItemNotFoundException,
+};
 use PDO;
 
 class DatabaseCheckoutCartItemRepository implements CheckoutCartItemRepository
@@ -62,7 +66,7 @@ class DatabaseCheckoutCartItemRepository implements CheckoutCartItemRepository
 
     public function addItemToCart(CheckoutCart $cart, array $data): CheckoutCartItem
     {
-        $item = new CheckoutCartItem;
+        $item = new CheckoutCartItem();
         $item->productId = $data['productId'];
         $item->checkoutCartId = $cart->id;
         $item->quantity = $data['quantity'];

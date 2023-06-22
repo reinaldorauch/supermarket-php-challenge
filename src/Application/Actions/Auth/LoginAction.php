@@ -30,7 +30,7 @@ class LoginAction extends AuthAction
             $jwt = JWT::encode([
                 'iat' => (new \DateTime())->getTimestamp(),
                 'exp' => (new \DateTime('now +2 hours'))->getTimestamp(),
-                'jti' => (new Base62)->encode(random_bytes(16)),
+                'jti' => (new Base62())->encode(random_bytes(16)),
                 "sub" => $user->getId(),
             ], $this->settings->get('secret'));
             return $this->respondWithData(['token' => $jwt]);

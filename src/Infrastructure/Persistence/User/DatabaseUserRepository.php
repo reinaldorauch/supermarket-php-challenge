@@ -9,7 +9,6 @@ use App\Domain\User\User;
 use App\Domain\User\UserNotFoundException;
 use App\Domain\User\UserRepository;
 
-
 class DatabaseUserRepository implements UserRepository
 {
     public function __construct(private PDO $db)

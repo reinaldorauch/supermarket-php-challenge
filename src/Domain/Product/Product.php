@@ -15,7 +15,7 @@ class Product implements JsonSerializable
     public ProductType|int $type;
     private ?int $id = null;
 
-    static function createFromArray(array $data)
+    public static function createFromArray(array $data)
     {
         $prod = new Product();
 
@@ -42,7 +42,11 @@ class Product implements JsonSerializable
         return [
             'name' => ['value' => $this->name, 'type' => PDO::PARAM_STR],
             'price' => ['value' => $this->price, 'type' => PDO::PARAM_INT],
-            'type' => ['value' => $this->type instanceof ProductType ? $this->type->getId() : $this->type, 'type' => PDO::PARAM_INT],
+            'type' => [
+                'value' => $this->type instanceof ProductType
+                    ? $this->type->getId()
+                    : $this->type, 'type' => PDO::PARAM_INT
+            ],
         ];
     }
 

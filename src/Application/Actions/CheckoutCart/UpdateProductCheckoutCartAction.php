@@ -7,7 +7,6 @@ namespace App\Application\Actions\CheckoutCart;
 use App\Domain\CheckoutCart\CheckoutCartRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 
-
 class UpdateProduictCheckoutCartAction extends CheckoutCartAction
 {
     public function action(): Response

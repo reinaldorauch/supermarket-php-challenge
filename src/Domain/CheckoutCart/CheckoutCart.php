@@ -25,7 +25,11 @@ class CheckoutCart implements JsonSerializable
             'id' => $this->id,
             'items' => array_map(fn ($i) => $i->jsonSerialize(), $this->items),
             'totalTax' => array_reduce($this->items, fn ($acc, $i) => $acc + $i->chargedTotalTax, 0),
-            'total' => array_reduce($this->items, fn ($acc, $i) => $acc + $i->chargedTotalPrice + $i->chargedTotalTax, 0)
+            'total' => array_reduce(
+                $this->items,
+                fn ($acc, $i) => $acc + $i->chargedTotalPrice + $i->chargedTotalTax,
+                0
+            )
         ];
     }
 }

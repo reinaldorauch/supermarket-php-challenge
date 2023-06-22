@@ -12,7 +12,7 @@ class ProductType implements JsonSerializable
     public int $taxRate;
     public ?int $id;
 
-    static function createFromArray(array $data)
+    public static function createFromArray(array $data)
     {
         $prodType = new ProductType();
 

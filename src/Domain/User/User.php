@@ -18,7 +18,7 @@ class User implements JsonSerializable
 
     public string $passwordHash;
 
-    static function from(?int $id, string $username, string $firstName, string $lastName)
+    public static function from(?int $id, string $username, string $firstName, string $lastName)
     {
         $u = new User();
         $u->id = $id;
@@ -48,7 +48,7 @@ class User implements JsonSerializable
         return $this->lastName;
     }
 
-    function setPassword(string $password): void
+    public function setPassword(string $password): void
     {
         $this->passwordHash = password_hash($password, PASSWORD_ARGON2ID);
     }

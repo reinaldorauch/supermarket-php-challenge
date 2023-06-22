@@ -70,7 +70,9 @@ class TestCase extends PHPUnit_TestCase
     protected function resetDatabase()
     {
         $dsn = $_ENV['DATABASE_URL'];
-        if (!is_string($dsn)) throw new \Exception('Invalid config type');
+        if (!is_string($dsn)) {
+            throw new \Exception('Invalid config type');
+        }
 
         $db = preg_replace('/^.+dbname=([^;]+);.+$/', '\1', $dsn);
         $origConnString = str_replace(';', ' ', preg_replace('/^pgsql:(.+)$/', '\1', $dsn));
@@ -85,7 +87,7 @@ class TestCase extends PHPUnit_TestCase
 
         \pg_close($conn);
 
-        // Then, to load the script we need to close the last connection and 
+        // Then, to load the script we need to close the last connection and
         // connect it again, now specifying the database name
         $conn = \pg_connect($origConnString) or throw new \Exception('Could not connect to postgres');
 
