@@ -28,4 +28,6 @@ interface CheckoutCartRepository
      * @return CheckoutCart
      */
     public function create(int $userId): CheckoutCart;
+
+    public function finalize(int $userId, int $cartId): void;
 }

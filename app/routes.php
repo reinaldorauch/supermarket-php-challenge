@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Application\Actions\Auth\LoginAction;
-use App\Application\Actions\CheckoutCart\{AddProductCheckoutCartAction, CreateCheckoutCartAction, ViewCheckoutCartAction, ViewCurrentCheckoutCartAction};
+use App\Application\Actions\CheckoutCart\{AddProductCheckoutCartAction, CreateCheckoutCartAction, FinalizeCheckoutCartAction, ViewCheckoutCartAction, ViewCurrentCheckoutCartAction};
 use App\Application\Actions\Product\{CreateProductAction, ListProductsAction, ViewProductAction};
 use App\Application\Actions\ProductType\{CreateProductTypeAction, ListProductTypesAction};
 use App\Application\Actions\User\{CreateUserAction, ListUsersAction, ViewUserAction};
@@ -49,5 +49,6 @@ return function (App $app) {
         $group->get('/current', ViewCurrentCheckoutCartAction::class);
         $group->get('/{id}', ViewCheckoutCartAction::class);
         $group->post('/{id}/add', AddProductCheckoutCartAction::class);
+        $group->post('/{id}/finalize', FinalizeCheckoutCartAction::class);
     });
 };

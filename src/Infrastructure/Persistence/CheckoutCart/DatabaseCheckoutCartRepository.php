@@ -9,7 +9,9 @@ use App\Domain\CheckoutCart\CheckoutCartNotFound;
 use App\Domain\CheckoutCart\CheckoutCartNotFoundException;
 use App\Domain\CheckoutCart\CheckoutCartRepository;
 use App\Infrastructure\Persistence\PostgresConnection;
+use FinalizeCheckoutCartException;
 use PDO;
+use PDOStatement;
 use Slim\Exception\HttpNotFoundException;
 
 class DatabaseCheckoutCartRepository implements CheckoutCartRepository
@@ -22,7 +24,9 @@ class DatabaseCheckoutCartRepository implements CheckoutCartRepository
     {
         return $this->db->query(
             'SELECT "id", "createdBy", "responsibleUserId" 
-            FROM "checkout_cart" WHERE "deletedAt" IS NULL',
+            FROM "checkout_cart"
+            WHERE "finalizedAt" IS NULL
+                AND "canceledAt" IS NULL ',
             PDO::FETCH_CLASS,
             CheckoutCart::class
         )
@@ -33,7 +37,9 @@ class DatabaseCheckoutCartRepository implements CheckoutCartRepository
     {
         $stmt = $this->db->prepare(
             'SELECT "id", "createdBy", "responsibleUserId" 
-            FROM "checkout_cart" WHERE "deletedAt" IS NULL AND "id" = ?'
+            FROM "checkout_cart" 
+            WHERE "finalizedAt" IS NULL
+                AND "canceledAt" IS NULL AND "id" = ?'
         );
         $stmt->bindParam(1, $id, PDO::PARAM_INT);
         $stmt->setFetchMode(PDO::FETCH_CLASS, CheckoutCart::class);
@@ -45,7 +51,10 @@ class DatabaseCheckoutCartRepository implements CheckoutCartRepository
     {
         $stmt = $this->db->prepare(
             'SELECT "id", "createdBy", "responsibleUserId" 
-            FROM "checkout_cart" WHERE "deletedAt" IS NULL AND "responsibleUserId" = ?'
+            FROM "checkout_cart" 
+            WHERE "finalizedAt" IS NULL
+                AND "canceledAt" IS NULL
+                AND "responsibleUserId" = ?'
         );
         $stmt->bindParam(1, $userId, PDO::PARAM_INT);
         $stmt->setFetchMode(PDO::FETCH_CLASS, CheckoutCart::class);
@@ -69,5 +78,25 @@ class DatabaseCheckoutCartRepository implements CheckoutCartRepository
         $stmt->bindParam('userId', $userId, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch();
+    }
+
+    public function finalize(int $userId, int $cartId): void
+    {
+        /** @var PDOStatement */
+        $stmt = $this->db->prepare(
+            'UPDATE "checkout_cart" 
+            SET "finalizedAt" = CURRENT_TIMESTAMP 
+            WHERE "id" = ? 
+                AND "responsibleUserId" = ?
+                AND "finalizedAt" IS NULL 
+                AND "canceledAt" IS NULL'
+        );
+        $stmt->bindParam(1, $cartId, PDO::PARAM_INT);
+        $stmt->bindParam(2, $userId, PDO::PARAM_INT);
+        $stmt->execute();
+        if (1 !== $stmt->rowCount()) {
+            $this->db->query('ROLLBACK');
+            throw new FinalizeCheckoutCartException($userId, $cartId);
+        }
     }
 }
