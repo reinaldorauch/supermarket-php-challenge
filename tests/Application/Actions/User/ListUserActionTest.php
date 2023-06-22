@@ -16,6 +16,9 @@ class ListUserActionTest extends TestCase
     {
         $app = $this->getAppInstance();
 
+        [, $token] = $this->loginWithUser($app);
+
+
         /** @var Container $container */
         $container = $app->getContainer();
 
@@ -29,7 +32,11 @@ class ListUserActionTest extends TestCase
 
         $container->set(UserRepository::class, $userRepositoryProphecy->reveal());
 
-        $request = $this->createRequest('GET', '/users');
+        $request = $this->createRequest(
+            'GET',
+            '/users',
+            ['HTTP_AUTHORIZATION' => "Bearer {$token}"]
+        );
         $response = $app->handle($request);
 
         $payload = (string) $response->getBody();

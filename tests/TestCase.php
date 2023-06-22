@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests;
 
 use App\Application\Settings\SettingsInterface;
+use App\Domain\User\UserRepository;
 use DI\Container;
 use DI\ContainerBuilder;
 use PHPUnit\Framework\TestCase as PHPUnit_TestCase;
@@ -119,5 +120,39 @@ class TestCase extends PHPUnit_TestCase
         }
 
         return new SlimRequest($method, $uri, $h, $cookies, $serverParams, $stream);
+    }
+
+    /**
+     * @return (User|string)[]
+     */
+    protected function loginWithUser(App $app)
+    {
+        $container = $app->getContainer();
+        /** @var UserRepository */
+        $repo = $container->get(UserRepository::class);
+
+        $creds = [
+            'username' => 'testuser',
+            'password' => '123456'
+        ];
+        $user = $repo->create([
+            'firstName' => 'Test',
+            'lastName' => 'User',
+            ...$creds
+        ]);
+
+        $req = $this->createRequest(
+            'POST',
+            '/auth/login',
+            ['HTTP_CONTENT_TYPE' => 'application/json'],
+            [],
+            [],
+            json_encode($creds)
+        );
+
+        $res = $app->handle($req);
+        $bodyData = json_decode((string) $res->getBody(), true);
+
+        return [$user, $bodyData['data']['token']];
     }
 }

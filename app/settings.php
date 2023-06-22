@@ -22,7 +22,8 @@ return function (ContainerBuilder $containerBuilder) {
                     'level' => Logger::DEBUG,
                 ],
                 'databaseUrl' => ($_ENV['DATABASE_URL'] ?? 'pgsql:host=localhost;dbname=softech-php-challenge;user=postgres;password=amigen'),
-                'secret' => ($_ENV['SECRET'] ?? 'acompleterandomsecret')
+                'secret' => ($_ENV['SECRET'] ?? 'acompleterandomsecret'),
+                'production' => ($_ENV['production'] ?? false)
             ]);
         }
     ]);

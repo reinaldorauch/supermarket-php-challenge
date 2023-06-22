@@ -20,6 +20,8 @@ class ViewUserActionTest extends TestCase
     {
         $app = $this->getAppInstance();
 
+        [$user, $token] = $this->loginWithUser($app);
+
         /** @var Container $container */
         $container = $app->getContainer();
 
@@ -33,7 +35,7 @@ class ViewUserActionTest extends TestCase
 
         $container->set(UserRepository::class, $userRepositoryProphecy->reveal());
 
-        $request = $this->createRequest('GET', '/users/1');
+        $request = $this->createRequest('GET', '/users/1', ['HTTP_AUTHORIZATION' => "Bearer {$token}"]);
         $response = $app->handle($request);
 
         $payload = (string) $response->getBody();
@@ -46,6 +48,7 @@ class ViewUserActionTest extends TestCase
     public function testActionThrowsUserNotFoundException()
     {
         $app = $this->getAppInstance();
+        [, $token] = $this->loginWithUser($app);
 
         $callableResolver = $app->getCallableResolver();
         $responseFactory = $app->getResponseFactory();
@@ -67,7 +70,7 @@ class ViewUserActionTest extends TestCase
 
         $container->set(UserRepository::class, $userRepositoryProphecy->reveal());
 
-        $request = $this->createRequest('GET', '/users/1');
+        $request = $this->createRequest('GET', '/users/1', ['HTTP_AUTHORIZATION' => "Bearer {$token}"]);
         $response = $app->handle($request);
 
         $payload = (string) $response->getBody();
