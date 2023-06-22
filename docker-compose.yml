@@ -5,14 +5,27 @@ volumes:
         driver: local
 
 services:
+    db:
+        image: postgres:15-alpine
+        restart: always
+        environment:
+            POSTGRES_PASSWORD: example
+
+    pgadmin:
+        image: adminer
+        restart: always
+        ports:
+            - '8888:8080'
+
     slim:
-        image: php:7-alpine
-        working_dir: /var/www
-        command: php -S 0.0.0.0:8080 -t public
+        build: .
+        command: php -S 0.0.0.0:8000 -t public
         environment:
             docker: "true"
+            DATABASE_URL: "pgsql:host=db;port=5432;dbname=postgres;user=postgres;password=example"
+            SECRET: "adioasjdoasidj8dj3d9jd0918u1ud91823h9d 1c39ucd1h9uh d h32h3p9du23h238d0h123897udh1o98duh"
         ports:
-            - "8080:8080"
+            - "8000:8000"
         volumes:
             - .:/var/www
             - logs:/var/www/logs

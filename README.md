@@ -1,39 +1,51 @@
-# Slim Framework 4 Skeleton Application
+# supermarket-php-challenge
 
-[![Coverage Status](https://coveralls.io/repos/github/slimphp/Slim-Skeleton/badge.svg?branch=master)](https://coveralls.io/github/slimphp/Slim-Skeleton?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/reinaldorauch/supermarket-php-challenge/badge.svg?branch=main)](https://coveralls.io/github/reinaldorauch/supermarket-php-challenge?branch=main)
 
-Use this skeleton application to quickly setup and start working on a new Slim Framework 4 application. This application uses the latest Slim 4 with Slim PSR-7 implementation and PHP-DI container implementation. It also uses the Monolog logger.
+The backend php application for a supermaket selling system.
 
-This skeleton application was built for Composer. This makes setting up a new Slim Framework application quick and easy.
+The frontend is [this repo](https://github.com/reinaldorauch/supermarket-php-challenge-front)
 
 ## Install the Application
 
-Run this command from the directory in which you want to install your new Slim Framework application. You will require PHP 7.4 or newer.
+You'll need to have PHP 8.2 installed for optimal results but PHP 7.4 should run just fine.
 
-```bash
-composer create-project slim/slim-skeleton [my-app-name]
+Also, you'll need a PostgreSQL database ready to be used by the app.
+
+In the repository, you need to set the `.env` file with the postgres url in PDO DSN format
+(example in `./.env.template` file) and a secret to be used for signing JWT tokens
+
+```env
+DATABASE_URL="pgsql:host=localhost;port=5432;dbname=supermarket-php-challenge;user=postgres;password=test"
+SECRET="a_cryptographic_secure_pseudorandom_data"
 ```
 
-Replace `[my-app-name]` with the desired directory name for your new application. You'll want to:
+Then, run the `./docs/database/00001_create_db.sql` SQL file in that Postgres database to create the schema
+structure and seed the first user.
 
-* Point your virtual host document root to your new application's `public/` directory.
-* Ensure `logs/` is web writable.
-
-To run the application in development, you can run these commands 
+To run the application in development, you can run these commands
 
 ```bash
-cd [my-app-name]
+cd [supermarket-php-challenge]
 composer start
 ```
 
 Or you can use `docker-compose` to run the app with `docker`, so you can run these commands:
+
 ```bash
-cd [my-app-name]
+cd [supermarket-php-challenge]
 docker-compose up -d
 ```
-After that, open `http://localhost:8080` in your browser.
 
-Run this command in the application directory to run the test suite
+Then, you can open the [Adminer](https://www.adminer.org/) db management interface and import the `./docs/database/00001_create_db.sql` file to generate the database schema.
+
+After that, open `http://localhost:8000` in your browser.
+
+## Testing
+
+You'll need to complete the database setup process above before you can run the tests.
+
+Run this command in the application directory to run the test suite:
 
 ```bash
 composer test
