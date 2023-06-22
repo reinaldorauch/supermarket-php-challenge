@@ -4,19 +4,16 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\CheckoutCart;
 
+use App\Application\Domain\CheckoutCart\FinalizeCheckoutCartException;
 use App\Domain\CheckoutCart\CheckoutCart;
-use App\Domain\CheckoutCart\CheckoutCartNotFound;
 use App\Domain\CheckoutCart\CheckoutCartNotFoundException;
 use App\Domain\CheckoutCart\CheckoutCartRepository;
-use App\Infrastructure\Persistence\PostgresConnection;
-use FinalizeCheckoutCartException;
 use PDO;
 use PDOStatement;
-use Slim\Exception\HttpNotFoundException;
 
 class DatabaseCheckoutCartRepository implements CheckoutCartRepository
 {
-    public function __construct(private \PDO $db)
+    public function __construct(private PDO $db)
     {
     }
 
