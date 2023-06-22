@@ -28,7 +28,7 @@ interface UserRepository
     /**
      * @param array $data
      * @return User
-     * @throws InvalidData
+     * @throws InvalidUserDataException
      */
     public function create(array $data): User;
 }

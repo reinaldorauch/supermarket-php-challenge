@@ -7,6 +7,7 @@ namespace App\Application\Actions\User;
 use App\Domain\DomainException\InvalidDataException;
 use Respect\Validation\Validator as v;
 use Psr\Http\Message\ResponseInterface as Response;
+use Respect\Validation\ChainedValidator;
 use Respect\Validation\Exceptions\ValidationException;
 
 class CreateUserAction extends UserAction
@@ -26,7 +27,7 @@ class CreateUserAction extends UserAction
         return $this->respondWithData($user);
     }
 
-    public static function validator(): v
+    public static function validator()
     {
         $stringValidator = v::alnum()->noWhitespace()->length(1, 255);
         return v::key('username', $stringValidator)

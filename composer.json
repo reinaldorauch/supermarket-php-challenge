@@ -49,6 +49,7 @@
   },
   "scripts": {
     "start": "php -S localhost:8000 -t public",
-    "test": "phpunit"
+    "test": "phpunit",
+    "lint": "phpcs && phpstan"
   }
 }
