@@ -21,7 +21,7 @@ class DatabaseProductTypeRepository implements ProductTypeRepository
     public function findAll(): array
     {
         return $this->db->query(
-            'SELECT * FROM "product_type" WHERE "deletedAt" IS NULL',
+            'SELECT "name", "taxRate", "id" FROM "product_type" WHERE "deletedAt" IS NULL',
             PDO::FETCH_CLASS,
             ProductType::class
         )->fetchAll();

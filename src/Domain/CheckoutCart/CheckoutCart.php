@@ -11,7 +11,7 @@ class CheckoutCart implements JsonSerializable
     /**
      * @var CheckoutCartItem[]
      */
-    public array $items;
+    public array $items = [];
 
     public int $id;
 

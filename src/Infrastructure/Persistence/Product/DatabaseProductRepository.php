@@ -18,7 +18,8 @@ class DatabaseProductRepository implements ProductRepository
     public function findAll()
     {
         return $this->db->query(
-            'SELECT * FROM "product" WHERE "deletedAt" IS NULL',
+            'SELECT "id", "name", "price", "productTypeId" as "type"
+                FROM "product" WHERE "deletedAt" IS NULL',
             PDO::FETCH_CLASS,
             Product::class
         )->fetchAll();
@@ -27,7 +28,7 @@ class DatabaseProductRepository implements ProductRepository
     public function findById(int $id): Product
     {
         $stmt = $this->db->prepare(
-            'SELECT "name", "price", "productTypeId" as "type", "id" 
+            'SELECT "id", "name", "price", "productTypeId" as "type"
             FROM "product" WHERE "deletedAt" IS NULL AND "id" = :id'
         );
         $stmt->setFetchMode(PDO::FETCH_CLASS, Product::class);
