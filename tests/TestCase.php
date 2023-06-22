@@ -69,7 +69,6 @@ class TestCase extends PHPUnit_TestCase
 
     protected function resetDatabase()
     {
-        print_r($_ENV);
         $dsn = $_ENV['DATABASE_URL'];
         if (!is_string($dsn)) throw new \Exception('Invalid config type');
 
