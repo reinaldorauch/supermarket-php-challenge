@@ -11,6 +11,7 @@ COPY . .
 
 RUN composer install
 
-EXPOSE 80/tcp
+ARG PORT
+ENV APP_PORT=${PORT}
 
-CMD php -S 0.0.0.0:80 -t public
+CMD php -S "0.0.0.0:${APP_PORT}" -t public
