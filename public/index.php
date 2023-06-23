@@ -12,14 +12,18 @@ use Slim\Factory\ServerRequestCreatorFactory;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$dotenv = \Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
-$dotenv->safeLoad();
-$dotenv->required(['DATABASE_URL', 'SECRET']);
+$isProd = (bool) ($_ENV['production'] ?? false);
+
+if (!$isProd) {
+	$dotenv = \Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+	$dotenv->safeLoad();
+	$dotenv->required(['DATABASE_URL', 'SECRET']);
+}
 
 // Instantiate PHP-DI ContainerBuilder
 $containerBuilder = new ContainerBuilder();
 
-if ((bool) ($_ENV['production'] ?? false)) { // Should be set to true in production
+if ($isProd) { // Should be set to true in production
 	$containerBuilder->enableCompilation(__DIR__ . '/../var/cache');
 }
 
