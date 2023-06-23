@@ -16,8 +16,6 @@ return function (App $app) {
         'secret' => $settings->get('secret'),
         'ignore' => ['/auth/login', '/test-action-response-code'],
         'attribute' => 'tokenPayload',
-        'secure' => $settings->get('production'),
-        "relaxed" => ['localhost', '127.0.0.1',
-            ...($settings->get('docker') ? ['0.0.0.0'] : [])]
+        'secure' => false, // Using this bacause we use a proxy in prod
     ]));
 };
