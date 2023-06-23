@@ -13,4 +13,9 @@ RUN composer install
 
 EXPOSE 80
 
+ENV docker=1
+ENV production=1
+ENV DATABASE_URL=${DATABASE_URL}
+ENV SECRET=${SECRET}}
+
 CMD php -S 0.0.0.0:80 -t public
