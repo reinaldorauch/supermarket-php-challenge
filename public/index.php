@@ -12,6 +12,9 @@ use Slim\Factory\ServerRequestCreatorFactory;
 
 require __DIR__ . '/../vendor/autoload.php';
 
+print_r($_ENV);
+print_r($_SERVER);
+
 $isProd = (bool) ($_ENV['production'] ?? false);
 
 if (!$isProd) {
