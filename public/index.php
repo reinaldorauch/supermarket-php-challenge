@@ -13,7 +13,7 @@ use Slim\Factory\ServerRequestCreatorFactory;
 require __DIR__ . '/../vendor/autoload.php';
 
 $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
-$dotenv->load();
+$dotenv->safeLoad();
 $dotenv->required(['DATABASE_URL', 'SECRET']);
 
 // Instantiate PHP-DI ContainerBuilder
