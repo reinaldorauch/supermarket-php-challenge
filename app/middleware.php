@@ -16,6 +16,7 @@ return function (App $app) {
         'secret' => $settings->get('secret'),
         'ignore' => ['/auth/login', '/test-action-response-code'],
         'attribute' => 'tokenPayload',
-        'secure' => $settings->get('production')
+        'secure' => $settings->get('production'),
+        "relaxed" => ['localhost', '127.0.0.1', ...($_ENV['docker'] ? ['0.0.0.0'] : [])]
     ]));
 };
