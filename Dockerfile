@@ -11,4 +11,6 @@ COPY . .
 
 RUN composer install
 
-CMD php -S 0.0.0.0:8000 -t public
+EXPOSE 80/tcp
+
+CMD php -S 0.0.0.0:80 -t public
